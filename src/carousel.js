@@ -484,7 +484,7 @@ const Carousel = React.createClass({
   formatChildren(children) {
     var self = this;
     return React.Children.map(children, function(child, index) {
-      return <li className="slider-slide" style={self.getSlideStyles()} key={index}>{child}</li>
+      return <li className="slider-slide" style={self.getSlideStyles(index)} key={index}>{child}</li>
     });
   },
 
@@ -616,19 +616,25 @@ const Carousel = React.createClass({
     }
   },
 
-  getSlideStyles() {
+  getSlideStyles(index) {
+    const { currentSlide, slideWidth } = this.state
+    const { vertical, cellSpacing, slidesToShow } = this.props
+    const autoHeight = true
+    const visible = index >= currentSlide && index < currentSlide + slidesToShow
+
     return {
-      display: this.props.vertical ? 'block' : 'inline-block',
+      display: vertical ? 'block' : 'inline-block',
       listStyleType: 'none',
       verticalAlign: 'top',
-      width: this.props.vertical ? '100%' : this.state.slideWidth,
+      width: vertical ? '100%' : slideWidth,
       height: 'auto',
+      maxHeight: autoHeight && !visible ? '0px' : '9999px',
       boxSizing: 'border-box',
       MozBoxSizing: 'border-box',
-      marginLeft: this.props.vertical ? 'auto' : this.props.cellSpacing / 2,
-      marginRight: this.props.vertical ? 'auto' : this.props.cellSpacing / 2,
-      marginTop: this.props.vertical ? this.props.cellSpacing / 2 : 'auto',
-      marginBottom: this.props.vertical ? this.props.cellSpacing / 2 : 'auto'
+      marginLeft: vertical ? 'auto' : cellSpacing / 2,
+      marginRight: vertical ? 'auto' : cellSpacing / 2,
+      marginTop: vertical ? cellSpacing / 2 : 'auto',
+      marginBottom: vertical ? cellSpacing / 2 : 'auto'
     }
   },
 
